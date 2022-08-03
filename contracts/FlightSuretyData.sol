@@ -12,6 +12,9 @@ contract FlightSuretyData {
     address private contractOwner;                                      // Account used to deploy contract
     bool private operational = true;                                    // Blocks all state changes throughout the contract if false
 
+    
+    mapping(address => bool) authorizeCallers;
+    
     /********************************************************************************************/
     /*                                       EVENT DEFINITIONS                                  */
     /********************************************************************************************/
@@ -65,10 +68,7 @@ contract FlightSuretyData {
     *
     * @return A bool that is the current operating status
     */      
-    function isOperational() 
-                            public 
-                            view 
-                            returns(bool) 
+    function isOperational() public view returns(bool) 
     {
         return operational;
     }
@@ -104,6 +104,10 @@ contract FlightSuretyData {
                             external
                             pure
     {
+    }
+
+    function authorizeCaller(address _address) public requireIsOperational requireContractOwner {
+        authorizeCallers[_address] = true;
     }
 
 
