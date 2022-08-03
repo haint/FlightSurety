@@ -98,12 +98,7 @@ contract FlightSuretyApp {
     * @dev Add an airline to the registration queue
     *
     */   
-    function registerAirline
-                            (   
-                            )
-                            external
-                            pure
-                            returns(bool success, uint256 votes)
+    function registerAirline(   ) external pure returns(bool success, uint256 votes)
     {
         return (success, 0);
     }

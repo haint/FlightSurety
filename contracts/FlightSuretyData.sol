@@ -12,9 +12,16 @@ contract FlightSuretyData {
     address private contractOwner;                                      // Account used to deploy contract
     bool private operational = true;                                    // Blocks all state changes throughout the contract if false
 
+    struct Airline {
+        bool isRegistered;
+        string name;
+        uint256 funded;
+    }
     
     mapping(address => bool) authorizeCallers;
-    
+    mapping(address => bool) authorizeAirlines;
+    mapping(address => Airline) airlines;
+
     /********************************************************************************************/
     /*                                       EVENT DEFINITIONS                                  */
     /********************************************************************************************/
@@ -73,6 +80,10 @@ contract FlightSuretyData {
         return operational;
     }
 
+    function isAirline(address _address) public view returns(bool) {
+        return airlines[_address].isRegistered;
+    }
+
 
     /**
     * @dev Sets contract operations on/off
@@ -98,16 +109,22 @@ contract FlightSuretyData {
     *      Can only be called from FlightSuretyApp contract
     *
     */   
-    function registerAirline
-                            (   
-                            )
-                            external
-                            pure
+    function registerAirline(address _address, string _name) public requireIsOperational
     {
+        require(authorizeAirlines[_address]);
+        airlines[_address] = Airline ({
+            isRegistered: true,
+            name: _name,
+            funded: 0
+        });
     }
 
     function authorizeCaller(address _address) public requireIsOperational requireContractOwner {
         authorizeCallers[_address] = true;
+    }
+
+    function authorizeAirline(address _address) public requireIsOperational requireContractOwner {
+        authorizeAirlines[_address] = true;
     }
 
 
